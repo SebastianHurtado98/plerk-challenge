@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  django:
+    build:
+      context: .
+      dockerfile: ./dockerfiles/local/django/Dockerfile
+    image: plerk-django-local
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./:/usr/src/app
+    env_file:
+      - .env
+    ports:
+      - 8000:8000
+    depends_on:
+      - postgres
+      
+  postgres:
+    image: postgres:13
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment: 
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=plerk
+
+volumes:
+  postgres_data:
